@@ -51,5 +51,21 @@ describe("Nc News, testing API's", () => {
           );
         });
     });
+    it("should respond with 404: Not found when article_id does not exist", () => {
+      return request(app)
+        .get("/api/articles/1000")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe(`Article id 1000 does not exist`);
+        });
+    });
+    it("should respond with 400: Invalid Id when article_id is an invalid data type ", () => {
+      return request(app)
+        .get("/api/articles/apple")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad request");
+        });
+    });
   });
 });
