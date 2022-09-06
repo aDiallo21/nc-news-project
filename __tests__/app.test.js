@@ -30,5 +30,13 @@ describe("Nc news API tests", () => {
           });
         });
     });
+    it("should respond with an error 404-not found when there's a typo in the endpoint", () => {
+      return request(app)
+        .get("/api/toopics")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("Not found");
+        });
+    });
   });
 });
