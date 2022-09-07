@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
-
 const { getTopics } = require("./controllers/topics.controller");
 const { getArticleById } = require("./controllers/articles.controller");
+const { getUsers } = require("./controllers/users.controller");
 
 app.get("/api/topics", getTopics);
 app.get("/api/articles/:article_id", getArticleById);
+app.get("/api/users", getUsers);
 
 // psql error handler
 app.use((err, req, res, next) => {

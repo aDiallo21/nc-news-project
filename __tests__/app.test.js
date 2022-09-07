@@ -30,7 +30,17 @@ describe("Nc News, testing API's", () => {
           });
         });
     });
-    it("should respond with an error 404-not found when there's a typo in the endpoint", () => {
+  });
+  describe("Responds with 404 Not Found when endpoint is incorrect", () => {
+    it("/api/isers endpoint", () => {
+      request(app)
+        .get("/api/isers")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("Not found");
+        });
+    });
+    it("/api/toopics endpoint ", () => {
       return request(app)
         .get("/api/toopics")
         .expect(404)
@@ -73,6 +83,26 @@ describe("Nc News, testing API's", () => {
         .expect(400)
         .then((res) => {
           expect(res.body.msg).toBe("Bad request");
+        });
+    });
+  });
+  describe("GET /api/users", () => {
+    it("should respond with an array of user objects ", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((res) => {
+          const users = res.body.users;
+          expect(users).toHaveLength(4);
+          users.forEach((user) => {
+            expect(user).toEqual(
+              expect.objectContaining({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              })
+            );
+          });
         });
     });
   });
