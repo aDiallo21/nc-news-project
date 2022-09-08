@@ -112,7 +112,7 @@ describe("Nc News, testing API's", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ incVotes: newVote })
-        .expect(201)
+        .expect(200)
         .then((res) => {
           expect(res.body.article.votes).toBe(101);
           expect(res.body.article).toEqual(
@@ -131,7 +131,7 @@ describe("Nc News, testing API's", () => {
       return request(app)
         .patch("/api/articles/1")
         .send({ incVotes: newVote })
-        .expect(201)
+        .expect(200)
         .then((res) => {
           expect(res.body.article.votes).toBe(99);
           expect(res.body.article).toEqual(
