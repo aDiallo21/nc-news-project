@@ -115,6 +115,15 @@ describe("Nc News, testing API's", () => {
         .expect(201)
         .then((res) => {
           expect(res.body.article.votes).toBe(101);
+          expect(res.body.article).toEqual(
+            expect.objectContaining({
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              votes: 101,
+            })
+          );
         });
     });
     it("should decrement the correct article's votes ", () => {
@@ -125,6 +134,15 @@ describe("Nc News, testing API's", () => {
         .expect(201)
         .then((res) => {
           expect(res.body.article.votes).toBe(99);
+          expect(res.body.article).toEqual(
+            expect.objectContaining({
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              votes: 99,
+            })
+          );
         });
     });
     it("should respond with 404: Not found when article_id does not exist", () => {
@@ -154,7 +172,5 @@ describe("Nc News, testing API's", () => {
           expect(res.body.msg).toBe("Bad request");
         });
     });
-    // handle if not passed object or object with wrong data type
-    // handle if votes object is empty -> stay the same, return error 400
   });
 });
