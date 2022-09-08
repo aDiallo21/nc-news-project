@@ -106,4 +106,71 @@ describe("Nc News, testing API's", () => {
         });
     });
   });
+  describe("PATCH /api/articles/:article_id", () => {
+    it("should increment the correct article's votes ", () => {
+      const newVote = 1;
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ incVotes: newVote })
+        .expect(200)
+        .then((res) => {
+          expect(res.body.article.votes).toBe(101);
+          expect(res.body.article).toEqual(
+            expect.objectContaining({
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              votes: 101,
+            })
+          );
+        });
+    });
+    it("should decrement the correct article's votes ", () => {
+      const newVote = -1;
+      return request(app)
+        .patch("/api/articles/1")
+        .send({ incVotes: newVote })
+        .expect(200)
+        .then((res) => {
+          expect(res.body.article.votes).toBe(99);
+          expect(res.body.article).toEqual(
+            expect.objectContaining({
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              votes: 99,
+            })
+          );
+        });
+    });
+    it("should respond with 404: Not found when article_id does not exist", () => {
+      return request(app)
+        .patch("/api/articles/1000")
+        .send({ incVotes: 1 })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe(`Article id 1000 does not exist`);
+        });
+    });
+    it("should respond with error 400 with a msg of bad request when votes is of wrong data type ", () => {
+      return request(app)
+        .patch("/api/articles/2")
+        .send({ incVotes: "abc" })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad request");
+        });
+    });
+    it("should respond with error 400 with a message of bad request when an empty object is sent", () => {
+      return request(app)
+        .patch("/api/articles/2")
+        .send({})
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad request");
+        });
+    });
+  });
 });
