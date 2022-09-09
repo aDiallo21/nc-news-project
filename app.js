@@ -4,6 +4,7 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticleById,
   patchVotes,
+  addCommentCount,
 } = require("./controllers/articles.controller");
 const { getUsers } = require("./controllers/users.controller");
 

@@ -49,7 +49,7 @@ describe("Nc News, testing API's", () => {
         });
     });
   });
-  describe("GET /api/articles/:article_id", () => {
+  describe.only("GET /api/articles/:article_id", () => {
     it("should respond with the article that matches the article_id passed in", () => {
       return request(app)
         .get("/api/articles/1")
@@ -170,6 +170,29 @@ describe("Nc News, testing API's", () => {
         .expect(400)
         .then((res) => {
           expect(res.body.msg).toBe("Bad request");
+        });
+    });
+  });
+  describe.only("Add comment count to article response object", () => {
+    it("should respond with the article object inluding a new property with the comment count", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((res) => {
+          const article = res.body.article;
+          expect(article.comment_count).toBe("11");
+          expect(article).toEqual(
+            expect.objectContaining({
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              author: expect.any(String),
+              body: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              topic: expect.any(String),
+              comment_count: "11",
+            })
+          );
         });
     });
   });
