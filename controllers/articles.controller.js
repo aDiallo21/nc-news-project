@@ -1,4 +1,8 @@
-const { findArticleById, incVotesById } = require("../models/articles.model");
+const {
+  findArticleById,
+  incVotesById,
+  findAllArticles,
+} = require("../models/articles.model");
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
@@ -21,4 +25,9 @@ exports.patchVotes = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
+};
+exports.getArticles = (req, res, next) => {
+  findAllArticles(req.query).then((articles) => {
+    res.status(200).send({ articles });
+  });
 };

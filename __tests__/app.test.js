@@ -49,7 +49,7 @@ describe("Nc News, testing API's", () => {
         });
     });
   });
-  describe.only("GET /api/articles/:article_id", () => {
+  describe("GET /api/articles/:article_id", () => {
     it("should respond with the article that matches the article_id passed in", () => {
       return request(app)
         .get("/api/articles/1")
@@ -173,14 +173,14 @@ describe("Nc News, testing API's", () => {
         });
     });
   });
-  describe.only("Add comment count to article response object", () => {
+  describe("Add comment count to article response object", () => {
     it("should respond with the article object inluding a new property with the comment count", () => {
       return request(app)
         .get("/api/articles/1")
         .expect(200)
         .then((res) => {
           const article = res.body.article;
-          expect(article.comment_count).toBe("11");
+          expect(article.comment_count).toBe(11);
           expect(article).toEqual(
             expect.objectContaining({
               article_id: 1,
@@ -190,9 +190,56 @@ describe("Nc News, testing API's", () => {
               created_at: expect.any(String),
               votes: expect.any(Number),
               topic: expect.any(String),
-              comment_count: "11",
+              comment_count: 11,
             })
           );
+        });
+    });
+  });
+  describe("Get all articles, ", () => {
+    it("should respond with an array of article objects  ", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((res) => {
+          const articles = res.body.articles;
+          expect(articles).not.toHaveLength(0);
+          articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                topic: expect.any(String),
+                comment_count: expect.any(String),
+              })
+            );
+          });
+        });
+    });
+    it("should sort by date in descending order ", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((res) => {
+          const articles = res.body.articles;
+          expect(Array.isArray(articles)).toBe(true);
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    it("should respond with an array of articles that match the topic", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then((res) => {
+          const articles = res.body.articles;
+          expect(articles).toHaveLength(1);
+          articles.forEach((article) => {
+            expect(article.topic).toBe("cats");
+          });
         });
     });
   });
